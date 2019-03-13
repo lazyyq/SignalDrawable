@@ -12,13 +12,11 @@
  * permissions and limitations under the License.
  */
 
-package com.android.settingslib.graph;
+package kyklab.signaldrawable;
 
-import android.animation.ArgbEvaluator;
-import android.annotation.IntRange;
-import android.annotation.NonNull;
-import android.annotation.Nullable;
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Matrix;
@@ -32,10 +30,11 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
-import android.util.LayoutDirection;
-
-import com.android.settingslib.R;
-import com.android.settingslib.Utils;
+import android.support.annotation.ColorInt;
+import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.View;
 
 public class SignalDrawable extends Drawable {
 
@@ -69,7 +68,7 @@ public class SignalDrawable extends Drawable {
 
     private static final long DOT_DELAY = 1000;
 
-    private static float[][] X_PATH = new float[][]{
+    private static final float[][] X_PATH = new float[][]{
             {21.9f / VIEWPORT, 17.0f / VIEWPORT},
             {-1.1f / VIEWPORT, -1.1f / VIEWPORT},
             {-1.9f / VIEWPORT, 1.9f / VIEWPORT},
@@ -132,13 +131,13 @@ public class SignalDrawable extends Drawable {
 
     public SignalDrawable(Context context) {
         mDarkModeBackgroundColor =
-                Utils.getDefaultColor(context, R.color.dark_mode_icon_color_dual_tone_background);
+                getDefaultColor(context, R.color.dark_mode_icon_color_dual_tone_background);
         mDarkModeFillColor =
-                Utils.getDefaultColor(context, R.color.dark_mode_icon_color_dual_tone_fill);
+                getDefaultColor(context, R.color.dark_mode_icon_color_dual_tone_fill);
         mLightModeBackgroundColor =
-                Utils.getDefaultColor(context, R.color.light_mode_icon_color_dual_tone_background);
+                getDefaultColor(context, R.color.light_mode_icon_color_dual_tone_background);
         mLightModeFillColor =
-                Utils.getDefaultColor(context, R.color.light_mode_icon_color_dual_tone_fill);
+                getDefaultColor(context, R.color.light_mode_icon_color_dual_tone_fill);
         mIntrinsicSize = context.getResources().getDimensionPixelSize(R.dimen.signal_icon_size);
 
         mHandler = new Handler();
@@ -147,6 +146,15 @@ public class SignalDrawable extends Drawable {
         mAppliedCornerInset = context.getResources()
                 .getDimensionPixelSize(R.dimen.stat_sys_mobile_signal_circle_inset);
     }
+
+    @ColorInt
+    private int getDefaultColor(Context context, int resId) {
+        final ColorStateList list =
+                context.getResources().getColorStateList(resId, context.getTheme());
+
+        return list.getDefaultColor();
+    }
+
 
     public void setIntrinsicSize(int size) {
         mIntrinsicSize = size;
@@ -223,8 +231,10 @@ public class SignalDrawable extends Drawable {
                 darkIntensity, mLightModeBackgroundColor, mDarkModeBackgroundColor);
     }
 
+    @SuppressLint("RestrictedApi")
     private int getColorForDarkIntensity(float darkIntensity, int lightColor, int darkColor) {
-        return (int) ArgbEvaluator.getInstance().evaluate(darkIntensity, lightColor, darkColor);
+        return (int) android.support.graphics.drawable.ArgbEvaluator.getInstance()
+                .evaluate(darkIntensity, lightColor, darkColor);
     }
 
     @Override
@@ -238,7 +248,7 @@ public class SignalDrawable extends Drawable {
         final float width = getBounds().width();
         final float height = getBounds().height();
 
-        boolean isRtl = getLayoutDirection() == LayoutDirection.RTL;
+        boolean isRtl = getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
         if (isRtl) {
             canvas.save();
             // Mirror the drawable
@@ -403,6 +413,7 @@ public class SignalDrawable extends Drawable {
         mForegroundPaint.setColorFilter(colorFilter);
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     public int getOpacity() {
         return 255;

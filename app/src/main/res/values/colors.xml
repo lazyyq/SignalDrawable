@@ -3,4 +3,15 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="dark_mode_icon_color_dual_tone_background">#3d000000</color>
+    <color name="dark_mode_icon_color_dual_tone_fill">#7a000000</color>
+    <color name="light_mode_icon_color_dual_tone_background">#4dffffff</color>
+    <color name="light_mode_icon_color_dual_tone_fill">#ffffff</color>
+
+    <!-- SignalDrawable -->
+    <dimen name="signal_icon_size">15dp</dimen>
+    <!-- How far to inset the rounded edges -->
+    <dimen name="stat_sys_mobile_signal_circle_inset">0.9dp</dimen>
+
 </resources>
